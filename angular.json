@@ -1,0 +1,32 @@
+{
+    "version": 1,
+    "projects": {
+      "todo_test": {
+        "projectType": "application",
+        "root": "",
+        "sourceRoot": "src",
+        "architect": {
+          "build": {
+            "builder": "@angular-devkit/build-angular:browser",
+            "options": {
+              "outputPath": "dist/todo_test",
+              "index": "src/index.html",
+              "main": "src/main.ts",
+              "polyfills": "src/polyfills.ts",
+              "tsConfig": "tsconfig.json",
+              "aot": true
+            }
+          },
+          "serve": {
+            "builder": "@angular-devkit/build-angular:dev-server",
+            "options": {
+              "browserTarget": "todo_test:build"
+            }
+          }
+        }
+      }},
+    "defaultProject": "todo_test",
+    "cli": {
+      "analytics": false
+    }
+  }
