@@ -1,0 +1,24 @@
+<div class="main_wrap">
+    <div class="todo_wrap">
+        <div class="todo__add_task">
+            <input type="text" [(ngModel)]="newTaskText" />
+            <button (click)="addNewTask(newTaskText)"> + </button>
+        </div>
+        <div class="todo_list">
+            <div *ngFor="let task of toDoList" class="todo_item">
+                <!-- {{task.text}}
+                {{task.isEdit}} -->
+                <input *ngIf="task.isEdit" type="text" [(ngModel)]="task.text" />
+                <button *ngIf="task.isEdit" (click)="changeTask(task)"> chg </button>
+
+                <p *ngIf="!task.isEdit">{{task.text}}</p>
+                <div *ngIf="!task.isEdit">
+                    <input type="checkbox" checked="!!task.isCompleted" (click)="changeTaskComplete(task)" />
+                    <button (click)="task.isEdit = true"> edit </button>
+                    <button (click)="deleteTask(task.id)"> del </button>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+</div>
