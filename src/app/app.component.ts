@@ -89,7 +89,7 @@ export class AppComponent {
         }
     }
     addAdditionalFields(tasks: ToDoItem[]): ToDoItem[] {
-        let updateTasks = tasks.map(task => {
+        return tasks.map(task => {
             return {
                 id: task.id,
                 beforeEditText: "",
@@ -99,8 +99,6 @@ export class AppComponent {
                 hide: false
             }
         })
-
-        return updateTasks
     }
     ngOnInit(){
         this.toDoListService.getTasks().subscribe({next:(data: ToDoItem[]) => {
