@@ -86,7 +86,7 @@ export class AppComponent {
     searchFilter(searchText: string) {
         this.toDoList.forEach(task => {
             
-            if (task.text.indexOf(searchText) === -1 && this.searchString !== "") {
+            if (task.text.toLowerCase().indexOf(searchText.toLowerCase()) === -1 && this.searchString !== "") {
                 task.hide = true
             } else {
                 task.hide = false
