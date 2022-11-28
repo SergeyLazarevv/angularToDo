@@ -14,7 +14,7 @@ export class TodoListService {
     addNewTask(task: ToDoItem): Observable<Object> {
         return this.http.post('http://localhost:3000/toDoList', task)
     }
-    async changeTask(task: ToDoItem) {
+    async changeTask(task: ToDoItem): Promise<Observable<Object>> {
         await this.http.patch('http://localhost:3000/toDoList/' + task.id, task).subscribe()
         return this.getTasks()
     }

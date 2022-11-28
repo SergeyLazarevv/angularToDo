@@ -28,7 +28,7 @@ export class AppComponent {
     }
 
     _isSomeOneEdit: boolean = false
-    get isSomeOneEdit() {
+    get isSomeOneEdit(): boolean {
         return this.toDoList.some(task => task.isEdit)
     }
 
@@ -80,7 +80,7 @@ export class AppComponent {
         })
         
     }
-    searchFilter(searchText: string) {
+    searchFilter(searchText: string): void {
         this.toDoList.forEach(task => {
             
             if (task.text.toLowerCase().indexOf(searchText.toLowerCase()) === -1 && this.searchString !== "") {
