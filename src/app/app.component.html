@@ -1,23 +1,43 @@
 <div class="main_wrap">
+    <!-- <confirm_modal></confirm_modal> -->
     <div class="todo_wrap">
-        <div class="todo__add_task">
-            <input type="text" [(ngModel)]="newTaskText" />
-            <button (click)="addNewTask(newTaskText)"> + </button>
+        <div class="todo_header">
+            <h2>ToDo</h2>
+            <i class="bi bi-file-text"></i>
         </div>
+        <div class="todo__add_task">
+            <input_ui [placeholder]="'Введите название задачи'" [(ngModel)]="newTaskText"></input_ui>
+            <button_ui [icon]="'bi-plus-square'" (click)="addNewTask(newTaskText)" [disabled]="!newTaskText"></button_ui>
+        </div>
+        <div class="line"></div>
+        <div class="search">
+            <input_ui [placeholder]="'Введите название для поиска'" [(ngModel)]="searchString"></input_ui>
+            <button_ui [icon]="'bi-search'" (click)="searchFilter(searchString)" ></button_ui>
+        </div>
+        <div class="line"></div>
         <div class="todo_list">
-            <div *ngFor="let task of toDoList" class="todo_item">
-                <!-- {{task.text}}
-                {{task.isEdit}} -->
-                <input *ngIf="task.isEdit" type="text" [(ngModel)]="task.text" />
-                <button *ngIf="task.isEdit" (click)="changeTask(task)"> chg </button>
-
-                <p *ngIf="!task.isEdit">{{task.text}}</p>
-                <div *ngIf="!task.isEdit">
-                    <input type="checkbox" checked="!!task.isCompleted" (click)="changeTaskComplete(task)" />
-                    <button (click)="task.isEdit = true"> edit </button>
-                    <button (click)="deleteTask(task.id)"> del </button>
+            <div *ngFor="let task of toDoList">
+                <div *ngIf="!task.hide" class="todo_item">
+                    <div *ngIf="task.isEdit" class="todo_list_item__edit">
+                        <input_ui [placeholder]="'Введите название задачи'" [(ngModel)]="task.text"></input_ui>
+                        <div class="todo_list_item__edit_buttons">
+                            <button_ui [icon]="'bi-check2'" [disabled]="!task.text" (click)="changeTask(task)"></button_ui>
+                            <button_ui [icon]="'bi-reply'" (click)="cancelEditTask(task)"></button_ui>
+                        </div>
+                    </div>
+                    <div *ngIf="!task.isEdit" class="todo_list_item__show">
+                        <div class="todo_list_item__show_checkbox">
+                            <input type="checkbox" [checked]="task.isCompleted" (click)="changeTaskComplete(task)" />
+                        </div>
+                        <div class="todo_list_item__show_text">
+                            <p [ngClass]="{'done_text': task.isCompleted }">{{task.text}}</p>
+                        </div>
+                        <div class="todo_list_item__show_buttons">
+                            <button_ui [icon]="'bi-pen'" [disabled]="isSomeOneEdit" (click)="editTask(task)"></button_ui>
+                            <button_ui [icon]="'bi-trash3'" (click)="deleteTask(task.id)"></button_ui>
+                        </div>
+                    </div>
                 </div>
-    
             </div>
         </div>
     </div>

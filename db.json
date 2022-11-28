@@ -1,22 +1,19 @@
 {
   "toDoList": [
     {
-      "id": 3,
-      "text": "Вырастить сына4",
+      "text": "Погладить кота",
       "isCompleted": true,
-      "isEdit": false
+      "id": 3
     },
     {
-      "text": "qwqwqw",
+      "text": "Купить молоко",
       "isCompleted": true,
-      "id": 9,
-      "isEdit": false
+      "id": 4
     },
     {
-      "text": "qqqq",
+      "text": "Выспаться",
       "isCompleted": false,
-      "id": 10,
-      "isEdit": false
+      "id": 5
     }
   ]
 }
