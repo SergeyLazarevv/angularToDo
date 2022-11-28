@@ -42,12 +42,9 @@ export class AppComponent {
         }
     }
     async changeTask(task: ToDoItem): Promise<void> {
-        console.log('11111')
         task = this.removeAdditionalFields(task)
         await this.toDoListService.changeTask(task).then((data: Observable<Object>) => {
-            console.log('44444', data)
             data.subscribe({next: (data: ToDoItem[]) => {
-                console.log('555')
                 this.toDoList = this.addAdditionalFields(data)
                 this.searchFilter(this.searchString)
             }})
