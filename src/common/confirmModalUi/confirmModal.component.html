@@ -1,5 +1,5 @@
-<div id="confirm_modal">
+<div *ngIf="show" id="confirm_modal">
     <h4>{{text}}</h4>
-    <button_ui text="Да"></button_ui>
-    <button_ui text="Нет"></button_ui>
+    <button_ui text="Да" (click)="successFunc"></button_ui>
+    <button_ui text="Нет" (click)="show=false"></button_ui>
 </div>

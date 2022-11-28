@@ -14,12 +14,12 @@ export class TodoListService {
     addNewTask(task: ToDoItem): Observable<Object> {
         return this.http.post('http://localhost:3000/toDoList', task)
     }
-    changeTask(task: ToDoItem): Observable<Object> {
-        this.http.patch('http://localhost:3000/toDoList/' + task.id, task).subscribe({next:(data) => console.log('changed')})
+    async changeTask(task: ToDoItem) {
+        await this.http.patch('http://localhost:3000/toDoList/' + task.id, task).subscribe()
         return this.getTasks()
     }
-    deleteTask(id: number): Observable<Object>  {
-        this.http.delete('http://localhost:3000/toDoList/' + id).subscribe({next:(data) => console.log('deleted')})
+    async deleteTask(id: number): Promise<Observable<Object>>  {
+        await this.http.delete('http://localhost:3000/toDoList/' + id).subscribe()
         return this.getTasks()
     }
 }

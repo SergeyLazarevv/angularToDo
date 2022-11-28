@@ -3,6 +3,10 @@
     height: 100px;
     border: 1px solid rgba(0,0,0,.2);
     border-radius: 3px;
+    padding: 10px;
     text-align: center;
-    position: relative;
+    position: absolute;
+    z-index: 9999;
+    background: rgb(250, 250, 249);
+    top: 70px;
 }

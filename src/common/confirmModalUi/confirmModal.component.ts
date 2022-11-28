@@ -9,7 +9,9 @@ import { Input, Component} from '@angular/core';
 
 export class ConfirmModalUiComponent { 
 
+    @Input() show: boolean = false
     @Input() text: string = "Вопрос";
+    @Input() successFunc = () => null
 
     constructor(){}
 }

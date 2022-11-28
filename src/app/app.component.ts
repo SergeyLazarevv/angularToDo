@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TodoListService } from './app.service';
 import { ToDoItem } from './app.interface'
-import { TestScheduler } from 'rxjs/testing';
+import { Observable } from 'rxjs'
      
 @Component({
     selector: 'my-app',
@@ -14,6 +14,7 @@ export class AppComponent {
 
     toDoList: ToDoItem[] = [];
     newTaskText: string = "";
+    showModal: boolean = false;
     _searchString: string = localStorage.getItem('searchString') || ""
     
     get searchString(): string {
@@ -40,12 +41,17 @@ export class AppComponent {
             this.toDoListService.addNewTask(task).subscribe({next:(data: ToDoItem) => this.toDoList.push(data)});
         }
     }
-    changeTask(task: ToDoItem): void {
+    async changeTask(task: ToDoItem): Promise<void> {
+        console.log('11111')
         task = this.removeAdditionalFields(task)
-        this.toDoListService.changeTask(task).subscribe({next:(data: ToDoItem[]) => {
-            this.toDoList = this.addAdditionalFields(data)
-            this.searchFilter(this.searchString)
-        }});
+        await this.toDoListService.changeTask(task).then((data: Observable<Object>) => {
+            console.log('44444', data)
+            data.subscribe({next: (data: ToDoItem[]) => {
+                console.log('555')
+                this.toDoList = this.addAdditionalFields(data)
+                this.searchFilter(this.searchString)
+            }})
+        });
     }
     editTask(task: ToDoItem): void {
         task.isEdit = true
@@ -56,20 +62,26 @@ export class AppComponent {
         task.text = task.beforeEditText
         task.beforeEditText = ""
     }
-    changeTaskComplete(task: ToDoItem): void {
+    async changeTaskComplete(task: ToDoItem): Promise<void> {
         task.isCompleted = !task.isCompleted
         task = this.removeAdditionalFields(task)
-        this.toDoListService.changeTask(task).subscribe({next:(data: ToDoItem[]) => {
-            this.toDoList = this.addAdditionalFields(data)
-            this.searchFilter(this.searchString)
-        }});
+        await this.toDoListService.changeTask(task).then((data: Observable<Object>) => {
+            data.subscribe({next:(data: ToDoItem[]) => {
+                this.toDoList = this.addAdditionalFields(data)
+                this.searchFilter(this.searchString)
+            }});
+        })
+        
     }
-    deleteTask(id: number): void {
+    async deleteTask(id: number): Promise<void> {
         if(confirm('Delete task?'))
-        this.toDoListService.deleteTask(id).subscribe({next:(data: ToDoItem[]) => {
-            this.toDoList = this.addAdditionalFields(data)
-            this.searchFilter(this.searchString)
-        }});
+        await this.toDoListService.deleteTask(id).then((data: Observable<Object>) => {
+            data.subscribe({next:(data: ToDoItem[]) => {
+                this.toDoList = this.addAdditionalFields(data)
+                this.searchFilter(this.searchString)
+            }});
+        })
+        
     }
     searchFilter(searchText: string) {
         this.toDoList.forEach(task => {
