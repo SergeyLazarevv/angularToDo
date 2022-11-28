@@ -41,14 +41,14 @@ export class AppComponent {
             this.toDoListService.addNewTask(task).subscribe({next:(data: ToDoItem) => this.toDoList.push(data)});
         }
     }
-    async changeTask(task: ToDoItem): Promise<void> {
+    changeTask(task: ToDoItem): void {
         task = this.removeAdditionalFields(task)
-        await this.toDoListService.changeTask(task).then((data: Observable<Object>) => {
-            data.subscribe({next: (data: ToDoItem[]) => {
+        this.toDoListService.changeTask(task).subscribe({next: (data) => {
+            this.toDoListService.getTasks().subscribe({next:(data: ToDoItem[]) => {
                 this.toDoList = this.addAdditionalFields(data)
                 this.searchFilter(this.searchString)
-            }})
-        });
+            }});
+        }});
     }
     editTask(task: ToDoItem): void {
         task.isEdit = true
@@ -59,26 +59,24 @@ export class AppComponent {
         task.text = task.beforeEditText
         task.beforeEditText = ""
     }
-    async changeTaskComplete(task: ToDoItem): Promise<void> {
+    changeTaskComplete(task: ToDoItem): void {
         task.isCompleted = !task.isCompleted
         task = this.removeAdditionalFields(task)
-        await this.toDoListService.changeTask(task).then((data: Observable<Object>) => {
-            data.subscribe({next:(data: ToDoItem[]) => {
+        this.toDoListService.changeTask(task).subscribe({next:(data) => {
+            this.toDoListService.getTasks().subscribe({next:(data: ToDoItem[]) => {
                 this.toDoList = this.addAdditionalFields(data)
                 this.searchFilter(this.searchString)
             }});
-        })
-        
+        }});
     }
-    async deleteTask(id: number): Promise<void> {
+    deleteTask(id: number): void {
         if(confirm('Delete task?'))
-        await this.toDoListService.deleteTask(id).then((data: Observable<Object>) => {
-            data.subscribe({next:(data: ToDoItem[]) => {
+        this.toDoListService.deleteTask(id).subscribe({next:(data) => {
+            this.toDoListService.getTasks().subscribe({next:(data: ToDoItem[]) => {
                 this.toDoList = this.addAdditionalFields(data)
                 this.searchFilter(this.searchString)
             }});
-        })
-        
+        }});
     }
     searchFilter(searchText: string): void {
         this.toDoList.forEach(task => {
@@ -98,6 +96,7 @@ export class AppComponent {
         }
     }
     addAdditionalFields(tasks: ToDoItem[]): ToDoItem[] {
+        console.log('tasks ', tasks)
         return tasks.map(task => {
             return {
                 id: task.id,
