@@ -1,8 +1,6 @@
 export interface ToDoItem {
-    id?: number,
-    beforeEditText?: string,
+    readonly id?: number,
     isEdit?: boolean,
-    hide?: boolean,
     text: string,
     isCompleted: boolean
 }

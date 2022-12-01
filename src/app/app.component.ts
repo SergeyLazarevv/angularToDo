@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { TodoListService } from './app.service';
 import { ToDoItem } from './app.interface'
-import { Observable } from 'rxjs'
+import { map, switchMap, tap } from 'rxjs'
      
 @Component({
     selector: 'my-app',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
+    styleUrls: ['app.component.scss'],
     providers: [TodoListService]
 })
 
@@ -32,62 +32,52 @@ export class AppComponent {
         return this.toDoList.some(task => task.isEdit)
     }
 
-    constructor(private toDoListService: TodoListService){}
+    constructor(protected toDoListService: TodoListService){}
       
     addNewTask(newTaskText: string): void {
         if(newTaskText) {
             let task: ToDoItem = { text: newTaskText, isCompleted: false }
             this.newTaskText = ""
-            this.toDoListService.addNewTask(task).subscribe({next:(data: ToDoItem) => this.toDoList.push(data)});
+            this.toDoListService.addNewTask(task).subscribe({next:(data: ToDoItem) => this.toDoList.unshift(data)});
         }
     }
-    changeTask(task: ToDoItem): void {
-        task = this.removeAdditionalFields(task)
-        this.toDoListService.changeTask(task).subscribe({next: (data) => {
-            this.toDoListService.getTasks().subscribe({next:(data: ToDoItem[]) => {
-                this.toDoList = this.addAdditionalFields(data)
-                this.searchFilter(this.searchString)
-            }});
-        }});
+    changeTask(item: ToDoItem) {
+        const task: ToDoItem = this.removeAdditionalFields(item)
+        this.toDoListService.changeTask(task)
+            .pipe(
+                switchMap(changedtask => this.toDoListService.getTodoList(this.searchString)
+                    .pipe(
+                        map((todoList: ToDoItem[]) => todoList.sort((a,b) => b.id - a.id))
+                    )
+                )
+            )
+            .subscribe((todoList: ToDoItem[]) => this.toDoList = this.addAdditionalFields(todoList))
     }
     editTask(task: ToDoItem): void {
         task.isEdit = true
-        task.beforeEditText = task.text
+        localStorage.setItem('beforeEditText', task.text)
     }
     cancelEditTask(task: ToDoItem): void {
         task.isEdit = false
-        task.text = task.beforeEditText
-        task.beforeEditText = ""
+        task.text = localStorage.getItem('beforeEditText')
+        localStorage.removeItem('beforeEditText')
     }
     changeTaskComplete(task: ToDoItem): void {
         task.isCompleted = !task.isCompleted
-        task = this.removeAdditionalFields(task)
-        this.toDoListService.changeTask(task).subscribe({next:(data) => {
-            this.toDoListService.getTasks().subscribe({next:(data: ToDoItem[]) => {
-                this.toDoList = this.addAdditionalFields(data)
-                this.searchFilter(this.searchString)
-            }});
-        }});
+        this.changeTask(task)
     }
-    deleteTask(id: number): void {
+    deleteTask(id: number) {
         if(confirm('Delete task?'))
-        this.toDoListService.deleteTask(id).subscribe({next:(data) => {
-            this.toDoListService.getTasks().subscribe({next:(data: ToDoItem[]) => {
-                this.toDoList = this.addAdditionalFields(data)
-                this.searchFilter(this.searchString)
-            }});
-        }});
+        this.toDoListService.deleteTask(id).pipe(
+            switchMap(deletedtask => this.toDoListService.getTodoList(this.searchString)
+                .pipe(
+                    map((todoList: ToDoItem[]) => todoList.sort((a,b) => b.id - a.id))
+                )
+            )
+        )
+        .subscribe({next:(todoList: ToDoItem[]) => this.toDoList = this.addAdditionalFields(todoList)});
     }
-    searchFilter(searchText: string): void {
-        this.toDoList.forEach(task => {
-            
-            if (task.text.toLowerCase().indexOf(searchText.toLowerCase()) === -1 && this.searchString !== "") {
-                task.hide = true
-            } else {
-                task.hide = false
-            }
-        })
-    }
+
     removeAdditionalFields(task: ToDoItem): ToDoItem {
         return {
             id: task.id,
@@ -96,22 +86,25 @@ export class AppComponent {
         }
     }
     addAdditionalFields(tasks: ToDoItem[]): ToDoItem[] {
-        console.log('tasks ', tasks)
         return tasks.map(task => {
             return {
                 id: task.id,
-                beforeEditText: "",
                 isEdit: false,
                 text: task.text,
                 isCompleted: task.isCompleted,
-                hide: false
             }
         })
     }
+    getTodoList(searchString: string) {
+        this.toDoListService.getTodoList(searchString)
+            .pipe(
+                map((todoList: ToDoItem[]) => todoList.sort((a,b) => b.id - a.id))
+            )
+            .subscribe({next:(todoList: ToDoItem[]) => {
+                this.toDoList = this.addAdditionalFields(todoList)
+            }});
+    }
     ngOnInit(){
-        this.toDoListService.getTasks().subscribe({next:(data: ToDoItem[]) => {
-            this.toDoList = this.addAdditionalFields(data)
-            this.searchFilter(this.searchString)
-        }});
+        this.getTodoList(this.searchString)
     }
 }

@@ -12,12 +12,12 @@
         <div class="line"></div>
         <div class="search">
             <input_ui [placeholder]="'Введите название для поиска'" [(ngModel)]="searchString"></input_ui>
-            <button_ui [icon]="'bi-search'" (click)="searchFilter(searchString)" ></button_ui>
+            <button_ui [icon]="'bi-search'" (click)="getTodoList(searchString)" ></button_ui>
         </div>
         <div class="line"></div>
         <div class="todo_list">
             <div *ngFor="let task of toDoList">
-                <div *ngIf="!task.hide" class="todo_item">
+                <div class="todo_item">
                     <div *ngIf="task.isEdit" class="todo_list_item__edit">
                         <input_ui [placeholder]="'Введите название задачи'" [(ngModel)]="task.text"></input_ui>
                         <div class="todo_list_item__edit_buttons">

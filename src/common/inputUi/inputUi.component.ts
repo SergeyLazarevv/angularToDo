@@ -4,7 +4,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 @Component({
     selector: "input_ui",
     templateUrl: './inputUi.component.html',
-    styleUrls: ['./inputUi.component.css'],
+    styleUrls: ['./inputUi.component.scss'],
     providers: [{
         provide: NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => InputUiComponent),
