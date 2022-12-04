@@ -1,0 +1,7 @@
+<div *ngIf="data.text" id="backgroundLayer">
+    <div id="confirm_modal">
+        <h5>{{data.text}}</h5>
+        <button_ui text="Да" (click)="data.yesFunction()"></button_ui>
+        <button_ui text="Нет" (click)="data.noFunction()"></button_ui>
+    </div>
+</div>

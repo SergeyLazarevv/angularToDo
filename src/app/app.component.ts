@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TodoListService } from './app.service';
+import { ConfirmModalService } from '../common/confirmModal/confirmModal.service';
 import { ToDoItem } from './app.interface'
 import { map, switchMap, tap } from 'rxjs'
      
@@ -7,7 +8,7 @@ import { map, switchMap, tap } from 'rxjs'
     selector: 'my-app',
     templateUrl: './app.component.html',
     styleUrls: ['app.component.scss'],
-    providers: [TodoListService]
+    providers: [TodoListService, ConfirmModalService]
 })
 
 export class AppComponent { 
@@ -32,7 +33,10 @@ export class AppComponent {
         return this.toDoList.some(task => task.isEdit)
     }
 
-    constructor(protected toDoListService: TodoListService){}
+    constructor(
+        protected toDoListService: TodoListService, 
+        private confirmService: ConfirmModalService
+    ){}
       
     addNewTask(newTaskText: string): void {
         if(newTaskText) {
@@ -67,15 +71,24 @@ export class AppComponent {
         this.changeTask(task)
     }
     deleteTask(id: number) {
-        if(confirm('Delete task?'))
-        this.toDoListService.deleteTask(id).pipe(
-            switchMap(deletedtask => this.toDoListService.getTodoList(this.searchString)
-                .pipe(
-                    map((todoList: ToDoItem[]) => todoList.sort((a,b) => b.id - a.id))
+
+        this.confirmService.confirm("Элемент списка будет удалён, продолжить?",
+        function yes(){
+
+            this.toDoListService.deleteTask(id).pipe(
+                switchMap(deletedtask => this.toDoListService.getTodoList(this.searchString)
+                    .pipe(
+                        map((todoList: ToDoItem[]) => todoList.sort((a,b) => b.id - a.id))
+                    )
                 )
             )
-        )
-        .subscribe({next:(todoList: ToDoItem[]) => this.toDoList = this.addAdditionalFields(todoList)});
+            .subscribe({next:(todoList: ToDoItem[]) => this.toDoList = this.addAdditionalFields(todoList)});
+            this.confirmService.close()
+        }.bind(this),
+        function no(){
+
+            this.confirmService.close()
+        }.bind(this))
     }
 
     removeAdditionalFields(task: ToDoItem): ToDoItem {
