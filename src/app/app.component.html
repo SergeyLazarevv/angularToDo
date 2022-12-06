@@ -2,8 +2,10 @@
     <confirm_modal></confirm_modal>
     <div class="todo_wrap">
         <div class="search">
-            <!-- <input_ui [placeholder]="'Введите название для поиска'" [(ngModel)]="searchString"></input_ui> -->
-            <!-- <button_ui [icon]="'bi-search'" (click)="getTodoList(searchString)" ></button_ui> -->
+            <div class="search_text">
+                <span> Найдено задач: {{toDoList.length}} </span>
+                <span> Выполнено задач: {{comleteCount}} </span>
+            </div>
             <input type="text" placeholder="Поиск" [(ngModel)]="searchString"/>
             <button><i class="bi bi-search" (click)="getTodoList(searchString)"></i> </button>
         </div>

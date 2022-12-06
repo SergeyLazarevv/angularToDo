@@ -28,6 +28,10 @@ export class AppComponent {
         }
     }
 
+    get comleteCount() {
+        return this.toDoList.filter((item) => item.isCompleted).length
+    }
+
     _isSomeOneEdit: boolean = false
     get isSomeOneEdit(): boolean {
         return this.toDoList.some(task => task.isEdit)

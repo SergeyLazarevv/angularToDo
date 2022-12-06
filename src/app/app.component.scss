@@ -1,3 +1,6 @@
+$background: #f0efe9;
+$shadowBlack: rgba(0,0,0,.3);
+
 .main_wrap,
 .todo_item {
     display: flex;
@@ -9,12 +12,12 @@
     width: 100%;
     height: 100vh;
     position: relative;
-    background: #f0efe9;
+    background: $background;
  
 
     .todo_wrap {
         padding: 20px;
-        box-shadow: 5px 5px 5px rgba(0,0,0,.3);
+        box-shadow: 5px 5px 5px $shadowBlack;
         width: 400px;
         position: relative;
         background-color: #ffffff;
@@ -23,14 +26,22 @@
             display: flex;
             justify-content: end;
             align-items: center;
-            height: 30px;
+            height: 50px;
             width: 100%;
             margin-bottom: 10px;
+            .search_text {
+                display: flex;
+                flex-direction: column;
+                justify-content: left;
+                width: 100%;
+                color: $shadowBlack;
+                font-size: 14px;
+            }
             input {
                 height: 20px;
                 padding: 2px;
                 margin-right: 5px;
-                border: 1px solid rgba(0,0,0,.3);
+                border: 1px solid $shadowBlack;
             }
             button {
                 height: 26px;
@@ -98,12 +109,12 @@
         
         .done_text {
             text-decoration: line-through;
-            color: rgba(0,0,0,.3);
+            color: $shadowBlack;
         }
         
         .line {
-            height: 2px;
-            background-color: rgba(0,0,0,.2);
+            height: 10px;
+            background-color: rgba(0,0,0,.1);
             margin-left: -20px;
             margin-right: -20px;
         }
