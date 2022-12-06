@@ -1,20 +1,17 @@
 <div class="main_wrap">
     <confirm_modal></confirm_modal>
     <div class="todo_wrap">
-        <div class="todo_header">
-            <h2>ToDo</h2>
-            <i class="bi bi-file-text"></i>
+        <div class="search">
+            <!-- <input_ui [placeholder]="'Введите название для поиска'" [(ngModel)]="searchString"></input_ui> -->
+            <!-- <button_ui [icon]="'bi-search'" (click)="getTodoList(searchString)" ></button_ui> -->
+            <input type="text" placeholder="Поиск" [(ngModel)]="searchString"/>
+            <button><i class="bi bi-search" (click)="getTodoList(searchString)"></i> </button>
         </div>
+        <div class="line"></div>
         <div class="todo__add_task">
             <input_ui [placeholder]="'Введите название задачи'" [(ngModel)]="newTaskText"></input_ui>
             <button_ui [icon]="'bi-plus-square'" (click)="addNewTask(newTaskText)" [disabled]="!newTaskText"></button_ui>
         </div>
-        <div class="line"></div>
-        <div class="search">
-            <input_ui [placeholder]="'Введите название для поиска'" [(ngModel)]="searchString"></input_ui>
-            <button_ui [icon]="'bi-search'" (click)="getTodoList(searchString)" ></button_ui>
-        </div>
-        <div class="line"></div>
         <div class="todo_list">
             <div *ngFor="let task of toDoList">
                 <div class="todo_item">
