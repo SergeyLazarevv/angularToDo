@@ -1,0 +1,8 @@
+FROM node:12
+
+RUN mkdir /backend
+WORKDIR /backend
+COPY backend/package.json /backend/
+COPY . .
+EXPOSE 3000
+#CMD ["npm run dev"]

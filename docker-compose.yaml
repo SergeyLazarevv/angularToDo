@@ -1,0 +1,38 @@
+version: '3'
+
+services: 
+    nginx:
+        image: nginx:latest
+        volumes:
+            - ./frontside/:/var/www/frontside/dist/
+            - ./backend/:/var/www/backend/dist/
+           # - default.conf:/etc/nginx/conf.d/
+        ports: 
+            - 81:81
+    postgres:
+        image: postgres:13.3
+        restart: always
+        environment: 
+            POSTGRES_PASSWORD: test
+            POSTGRES_USER: test
+            POSTGRES_DB: test
+        ports:
+            - 3338:3338
+        volumes: 
+            - ./postgres:/var/lib/postgres
+            - ./dump:/docker-entrypoint-initdb.d/
+    backend:
+        build:
+            context: .
+            dockerfile: ./docker/DockerNode
+        depends_on:
+            - postgres
+        volumes: 
+            - ./backend:/backend
+        #command: npm run dev
+        restart: unless-stopped
+        #env_file: ./.env
+        ports:
+        - 3000:3000
+        stdin_open: true
+        tty: true
