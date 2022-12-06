@@ -36,6 +36,9 @@
                 height: 26px;
                 width: 26px;
                 border: none;
+                &:hover {
+                    cursor: pointer;
+                }
             }
         }
 
