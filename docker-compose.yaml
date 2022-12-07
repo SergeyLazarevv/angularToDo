@@ -29,8 +29,8 @@ services:
             - postgres
         volumes: 
             - ./backend:/backend
-        #command: npm run dev
         restart: unless-stopped
+        command: npm run start:dev
         #env_file: ./.env
         ports:
         - 3000:3000
