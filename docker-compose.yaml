@@ -4,7 +4,7 @@ services:
     nginx:
         image: nginx:latest
         volumes:
-            - ./frontside/:/var/www/frontside/dist/
+            - ./frontend/:/var/www/frontend/dist/
             - ./backend/:/var/www/backend/dist/
            # - default.conf:/etc/nginx/conf.d/
         ports: 
@@ -24,7 +24,7 @@ services:
     backend:
         build:
             context: .
-            dockerfile: ./docker/DockerNode
+            dockerfile: ./docker/DockerNodeBackend
         depends_on:
             - postgres
         volumes: 
@@ -34,5 +34,20 @@ services:
         #env_file: ./.env
         ports:
         - 3000:3000
+        stdin_open: true
+        tty: true
+    frontend:
+        build:
+            context: .
+            dockerfile: ./docker/DockerNodeFrontend
+        depends_on:
+            - backend
+        volumes: 
+            - ./frontend:/frontend
+        restart: unless-stopped
+        #command: npm run start
+        #env_file: ./.env
+        ports:
+        - 4200:4200
         stdin_open: true
         tty: true

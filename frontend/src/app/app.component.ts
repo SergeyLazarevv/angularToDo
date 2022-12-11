@@ -35,20 +35,20 @@ export class AppComponent {
     _isSomeOneEdit: boolean = false
     get isSomeOneEdit(): boolean {
         return this.toDoList.some(task => task.isEdit)
-    }
+    }  
 
-    constructor(
+    constructor(
         protected toDoListService: TodoListService, 
         private confirmService: ConfirmModalService
     ){}
-      
+
     addNewTask(newTaskText: string): void {
         if(newTaskText) {
             let task: ToDoItem = { text: newTaskText, isCompleted: false }
             this.newTaskText = ""
             this.toDoListService.addNewTask(task).subscribe({next:(data: ToDoItem) => this.toDoList.unshift(data)});
         }
-    }
+    }
     changeTask(item: ToDoItem) {
         const task: ToDoItem = this.removeAdditionalFields(item)
         this.toDoListService.changeTask(task)
@@ -108,20 +108,22 @@ export class AppComponent {
                 id: task.id,
                 isEdit: false,
                 text: task.text,
-                isCompleted: task.isCompleted,
+                isCompleted: !!task.isCompleted,
             }
         })
     }
     getTodoList(searchString: string) {
         this.toDoListService.getTodoList(searchString)
             .pipe(
+                tap((todoList: ToDoItem[]) => console.log(todoList)),
                 map((todoList: ToDoItem[]) => todoList.sort((a,b) => b.id - a.id))
             )
             .subscribe({next:(todoList: ToDoItem[]) => {
+                console.log('1111 ', todoList)
                 this.toDoList = this.addAdditionalFields(todoList)
             }});
     }
-    ngOnInit(){
-        this.getTodoList(this.searchString)
-    }
+    ngOnInit(){
+        this.getTodoList(this.searchString)
+    }
 }

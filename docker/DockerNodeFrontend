@@ -1,0 +1,7 @@
+FROM node:18.10
+
+RUN mkdir /frontend
+WORKDIR /frontend
+COPY frontend/package.json /frontend/
+COPY . .
+EXPOSE 4200
