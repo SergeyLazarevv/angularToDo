@@ -1,7 +1,6 @@
 import { Input, Component} from '@angular/core';
 import { ConfirmModalService } from './confirmModal.service'
 import { modalData } from './confirmModal.interface'
-import { Observable } from 'rxjs'
      
 @Component({
     selector: 'confirm_modal',
@@ -19,7 +18,7 @@ export class ConfirmModalUiComponent {
         noFunction: null
     }
 
-    constructor(private confirmModalService: ConfirmModalService){}
+    constructor(private confirmModalService: ConfirmModalService){}
 
     ngOnInit() {
         this.subscription = this.confirmModalService.getdata().subscribe((data: modalData) => {

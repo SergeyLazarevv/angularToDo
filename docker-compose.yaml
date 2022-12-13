@@ -40,12 +40,10 @@ services:
         build:
             context: .
             dockerfile: ./docker/DockerNodeFrontend
-        depends_on:
-            - backend
         volumes: 
             - ./frontend:/frontend
         restart: unless-stopped
-        #command: npm run start
+        command: npm run start
         #env_file: ./.env
         ports:
         - 4200:4200

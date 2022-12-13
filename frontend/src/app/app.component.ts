@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TodoListService } from './app.service';
 import { ConfirmModalService } from '../common/confirmModal/confirmModal.service';
-import { ToDoItem } from './app.interface'
+import { TodoItem } from './app.interface'
 import { map, switchMap, tap } from 'rxjs'
      
 @Component({
@@ -13,8 +13,8 @@ import { map, switchMap, tap } from 'rxjs'
 
 export class AppComponent { 
 
-    toDoList: ToDoItem[] = [];
-    newTaskText: string = "";
+    toDoList: TodoItem[] = [];
+    newItemText: string = "";
     showModal: boolean = false;
     _searchString: string = localStorage.getItem('searchString') || ""
     
@@ -28,13 +28,12 @@ export class AppComponent {
         }
     }
 
-    get comleteCount() {
-        return this.toDoList.filter((item) => item.isCompleted).length
+    get comleteCount(): number {
+        return this.toDoList.filter((item: TodoItem) => item.isCompleted).length
     }
 
-    _isSomeOneEdit: boolean = false
     get isSomeOneEdit(): boolean {
-        return this.toDoList.some(task => task.isEdit)
+        return this.toDoList.some((item: TodoItem) => item.isEdit)
     }  
 
     constructor(
@@ -42,51 +41,51 @@ export class AppComponent {
         private confirmService: ConfirmModalService
     ){}
 
-    addNewTask(newTaskText: string): void {
-        if(newTaskText) {
-            let task: ToDoItem = { text: newTaskText, isCompleted: false }
-            this.newTaskText = ""
-            this.toDoListService.addNewTask(task).subscribe({next:(data: ToDoItem) => this.toDoList.unshift(data)});
+    addNewItem(newItemText: string): void {
+        if(newItemText) {
+            let item: TodoItem = { text: newItemText, isCompleted: false }
+            this.newItemText = ""
+            this.toDoListService.addNewItem(item).subscribe({next:(data: TodoItem) => this.toDoList.unshift(data)});
         }
     }
-    changeTask(item: ToDoItem) {
-        const task: ToDoItem = this.removeAdditionalFields(item)
-        this.toDoListService.changeTask(task)
+    changeItem(item: TodoItem) {
+        const itemForSave: TodoItem = this.removeAdditionalFields(item)
+        this.toDoListService.changeItem(itemForSave)
             .pipe(
-                switchMap(changedtask => this.toDoListService.getTodoList(this.searchString)
+                switchMap(changedItem => this.toDoListService.getTodoList(this.searchString)
                     .pipe(
-                        map((todoList: ToDoItem[]) => todoList.sort((a,b) => b.id - a.id))
+                        map((todoList: TodoItem[]) => todoList.sort((a,b) => b.id - a.id))
                     )
                 )
             )
-            .subscribe((todoList: ToDoItem[]) => this.toDoList = this.addAdditionalFields(todoList))
+            .subscribe((todoList: TodoItem[]) => this.toDoList = this.addAdditionalFields(todoList))
     }
-    editTask(task: ToDoItem): void {
-        task.isEdit = true
-        localStorage.setItem('beforeEditText', task.text)
+    editItem(item: TodoItem): void {
+        item.isEdit = true
+        localStorage.setItem('beforeEditText', item.text)
     }
-    cancelEditTask(task: ToDoItem): void {
-        task.isEdit = false
-        task.text = localStorage.getItem('beforeEditText')
+    canceleditItem(item: TodoItem): void {
+        item.isEdit = false
+        item.text = localStorage.getItem('beforeEditText')
         localStorage.removeItem('beforeEditText')
     }
-    changeTaskComplete(task: ToDoItem): void {
-        task.isCompleted = !task.isCompleted
-        this.changeTask(task)
+    changeItemComplete(item: TodoItem): void {
+        item.isCompleted = !item.isCompleted
+        this.changeItem(item)
     }
-    deleteTask(id: number) {
+    deleteItem(id: number) {
 
         this.confirmService.confirm("Элемент списка будет удалён, продолжить?",
         function yes(){
 
-            this.toDoListService.deleteTask(id).pipe(
-                switchMap(deletedtask => this.toDoListService.getTodoList(this.searchString)
+            this.toDoListService.deleteItem(id).pipe(
+                switchMap(() => this.toDoListService.getTodoList(this.searchString)
                     .pipe(
-                        map((todoList: ToDoItem[]) => todoList.sort((a,b) => b.id - a.id))
+                        map((todoList: TodoItem[]) => todoList.sort((a,b) => b.id - a.id))
                     )
                 )
             )
-            .subscribe({next:(todoList: ToDoItem[]) => this.toDoList = this.addAdditionalFields(todoList)});
+            .subscribe({next:(todoList: TodoItem[]) => this.toDoList = this.addAdditionalFields(todoList)});
             this.confirmService.close()
         }.bind(this),
         function no(){
@@ -95,35 +94,37 @@ export class AppComponent {
         }.bind(this))
     }
 
-    removeAdditionalFields(task: ToDoItem): ToDoItem {
+    removeAdditionalFields(item: TodoItem): TodoItem {
         return {
-            id: task.id,
-            text: task.text,
-            isCompleted: task.isCompleted
+            id: item.id,
+            text: item.text,
+            isCompleted: item.isCompleted
         }
     }
-    addAdditionalFields(tasks: ToDoItem[]): ToDoItem[] {
-        return tasks.map(task => {
+    addAdditionalFields(todoList): TodoItem[] {
+        return todoList.map(item => {
             return {
-                id: task.id,
+                id: item.id,
                 isEdit: false,
-                text: task.text,
-                isCompleted: !!task.isCompleted,
+                text: item.text,
+                isCompleted: !!item.is_completed,
             }
         })
     }
     getTodoList(searchString: string) {
         this.toDoListService.getTodoList(searchString)
             .pipe(
-                tap((todoList: ToDoItem[]) => console.log(todoList)),
-                map((todoList: ToDoItem[]) => todoList.sort((a,b) => b.id - a.id))
+                //tap((todoList: TodoItem[]) => console.log(todoList)),
+                map((todoList: TodoItem[]) => todoList.sort((a,b) => b.id - a.id))
             )
-            .subscribe({next:(todoList: ToDoItem[]) => {
-                console.log('1111 ', todoList)
+            .subscribe({next:(todoList: TodoItem[]) => {
                 this.toDoList = this.addAdditionalFields(todoList)
             }});
     }
     ngOnInit(){
         this.getTodoList(this.searchString)
+    }
+    ngOnDestroy() {
+        localStorage.removeItem('beforeEditText')
     }
 }

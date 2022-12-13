@@ -6,13 +6,13 @@
                 <span> Найдено задач: {{toDoList.length}} </span>
                 <span> Выполнено задач: {{comleteCount}} </span>
             </div>
-            <input type="text" placeholder="Поиск" [(ngModel)]="searchString"/>
+            <input type="text" placeholder="Поиск" (keyup.enter)="getTodoList(searchString)" [(ngModel)]="searchString"/>
             <button><i class="bi bi-search" (click)="getTodoList(searchString)"></i> </button>
         </div>
         <div class="line"></div>
         <div class="todo__add_task">
-            <input_ui [placeholder]="'Введите название задачи'" [(ngModel)]="newTaskText"></input_ui>
-            <button_ui [icon]="'bi-plus-square'" (click)="addNewTask(newTaskText)" [disabled]="!newTaskText"></button_ui>
+            <input_ui [placeholder]="'Введите название задачи'" [(ngModel)]="newItemText" (keyup.enter)="addNewItem(newItemText)"></input_ui>
+            <button_ui [icon]="'bi-plus-square'" (click)="addNewItem(newItemText)" [disabled]="!newItemText"></button_ui>
         </div>
         <div class="todo_list">
             <div *ngFor="let task of toDoList">
@@ -20,20 +20,20 @@
                     <div *ngIf="task.isEdit" class="todo_list_item__edit">
                         <input_ui [placeholder]="'Введите название задачи'" [(ngModel)]="task.text"></input_ui>
                         <div class="todo_list_item__edit_buttons">
-                            <button_ui [icon]="'bi-check2'" [disabled]="!task.text" (click)="changeTask(task)"></button_ui>
-                            <button_ui [icon]="'bi-reply'" (click)="cancelEditTask(task)"></button_ui>
+                            <button_ui [icon]="'bi-check2'" [disabled]="!task.text" (click)="changeItem(task)"></button_ui>
+                            <button_ui [icon]="'bi-reply'" (click)="canceleditItem(task)"></button_ui>
                         </div>
                     </div>
                     <div *ngIf="!task.isEdit" class="todo_list_item__show">
                         <div class="todo_list_item__show_checkbox">
-                            <input type="checkbox" [checked]="task.isCompleted" (click)="changeTaskComplete(task)" />
+                            <input type="checkbox" [checked]="task.isCompleted" (click)="changeItemComplete(task)" />
                         </div>
                         <div class="todo_list_item__show_text">
                             <p [ngClass]="{'done_text': task.isCompleted }">{{task.text}}</p>
                         </div>
                         <div class="todo_list_item__show_buttons">
-                            <button_ui [icon]="'bi-pen'" [disabled]="isSomeOneEdit" (click)="editTask(task)"></button_ui>
-                            <button_ui [icon]="'bi-trash3'" (click)="deleteTask(task.id)"></button_ui>
+                            <button_ui [icon]="'bi-pen'" [disabled]="isSomeOneEdit" (click)="editItem(task)"></button_ui>
+                            <button_ui [icon]="'bi-trash3'" [disabled]="isSomeOneEdit" (click)="deleteItem(task.id)"></button_ui>
                         </div>
                     </div>
                 </div>

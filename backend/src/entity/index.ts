@@ -1,6 +1,6 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
-import { Todo } from "../../entity/Todo"
+import { Todo } from "./Todo"
 
 export const AppDataSource = new DataSource({
     type: "postgres",

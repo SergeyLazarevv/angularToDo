@@ -42,6 +42,11 @@ $shadowBlack: rgba(0,0,0,.3);
                 padding: 2px;
                 margin-right: 5px;
                 border: 1px solid $shadowBlack;
+                transition: .5s;
+                &:focus {
+                    outline: none;
+                    background-color: hsla(195, 53%, 79%, 0.274);
+                }
             }
             button {
                 height: 26px;

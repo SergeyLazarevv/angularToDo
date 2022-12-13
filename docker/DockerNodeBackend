@@ -3,6 +3,6 @@ FROM node:12
 RUN mkdir /backend
 WORKDIR /backend
 COPY backend/package.json /backend/
+RUN npm install
 COPY . .
 EXPOSE 3000
-#CMD ["npm run dev"]

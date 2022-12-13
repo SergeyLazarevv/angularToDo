@@ -1,25 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { Todo } from "../../entity/Todo"
-import { AppDataSource } from "./index"
+import { Todo } from "../entity/Todo"
+import { AppDataSource } from "../entity/index"
+import { TodoItem } from './todo.interface'
 
 @Injectable()
 export class TodoService {
 
-  async getTodoList(substr: string) {
+  async getTodoList(substr: string): Promise<TodoItem[]> {
 
     const query = await AppDataSource.getRepository(Todo).createQueryBuilder("todo")
-    if(substr) query.where("todo.text like :substr", { substr:`%${substr}%` });
-    const list = await query.getMany();
-    return list.map(todoItem => {
-      return {
-        id: todoItem.id,
-        text: todoItem.text,
-        isCompleted: todoItem.is_completed
-      }
-    })
+    if(substr) await query.where("todo.text like :substr", { substr:`%${substr}%` })
+    return await query.getMany();
   }
 
-  async addItem(item) {
+  async addItem(item): Promise<TodoItem> {
 
     const newItem = await AppDataSource.getRepository(Todo).createQueryBuilder("todo")
       .insert()
@@ -27,7 +21,7 @@ export class TodoService {
       .values(item)
       .execute()
 
-    const newItemId = newItem.identifiers[0].id
+    const newItemId: number = newItem.identifiers[0].id
     
     return await AppDataSource.getRepository(Todo)
       .createQueryBuilder("todo")
@@ -35,7 +29,7 @@ export class TodoService {
       .getOne();
   }
 
-  async deleteItem(id: number) {
+  async deleteItem(id: number): Promise<void> {
     await AppDataSource.getRepository(Todo)
       .createQueryBuilder("todo")
       .delete()
@@ -44,9 +38,8 @@ export class TodoService {
       .execute()
   }
 
-  async chgItem(item) {
-    // console.log(item)
-    // console.log(+item.isCompleted)
+  async chgItem(item): Promise<void> {
+  
     await AppDataSource.getRepository(Todo)
       .createQueryBuilder("todo")
       .update(Todo)
