@@ -9,7 +9,7 @@ export class TodoService {
   async getTodoList(substr: string): Promise<TodoItem[]> {
 
     const query = await AppDataSource.getRepository(Todo).createQueryBuilder("todo")
-    if(substr) await query.where("todo.text like :substr", { substr:`%${substr}%` })
+    if(substr) await query.where("LOWER(todo.text) like LOWER(:substr)", { substr:`%${substr}%` })
     return await query.getMany();
   }
 

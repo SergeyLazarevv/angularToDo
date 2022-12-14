@@ -73,7 +73,7 @@ export class AppComponent {
         item.isCompleted = !item.isCompleted
         this.changeItem(item)
     }
-    deleteItem(id: number) {
+    deleteItem(id: number): void {
 
         this.confirmService.confirm("Элемент списка будет удалён, продолжить?",
         function yes(){
